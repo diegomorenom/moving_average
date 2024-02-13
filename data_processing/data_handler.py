@@ -5,8 +5,8 @@ import datetime
 
 path = os.getcwd()
 parent_path = os.path.abspath(os.path.join(path, os.pardir))
-data_base_path = str(parent_path)+"/holt_winters/data_processing/data_base"
-forecast_path = str(parent_path)+"/holt_winters/data_processing/forecast_files"
+data_base_path = str(parent_path)+"/moving_average/data_processing/data_base"
+forecast_path = str(parent_path)+"/moving_average/data_processing/forecast_files"
 
 
 def get_data():
@@ -53,6 +53,9 @@ def structure_predictions(date, df_pred, family, store_nbr):
     return df_pred
     
 def save_predictions(date, df_pred):
-    file_name = forecast_path+'/forecast_hwinters_'+str(date.replace('-', ''))+'.csv'
+    file_name = forecast_path+'/forecast_smaverage_'+str(date.replace('-', ''))+'.csv'
+    df_pred['forecast_date'] = df_pred['forecast_date'].astype(str)
+    df_pred['forecast_date'] = pd.to_datetime(df_pred['forecast_date'])
+    df_pred = df_pred.loc[df_pred['forecast_date'] > date]
     df_pred.to_csv(file_name, mode='a', index=False, header=True)
     return "Forecast saved"
